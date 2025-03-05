@@ -4,6 +4,7 @@ import com.example.atp_back.common.BaseResponse;
 import com.example.atp_back.stock.model.req.StockReplyRegisterReq;
 import com.example.atp_back.stock.model.resp.StockDetailResp;
 import com.example.atp_back.stock.model.resp.StockListResp;
+import com.example.atp_back.stock.service.StockGraphService;
 import com.example.atp_back.stock.service.StockReplyLikesService;
 import com.example.atp_back.stock.service.StockReplyService;
 import com.example.atp_back.stock.service.StockService;
@@ -31,6 +32,7 @@ public class StockController {
     private final StockService stockService;
     private final StockReplyService stockReplyService;
     private final StockReplyLikesService stockReplyLikesService;
+    private final StockGraphService stockGraphService;
 
     @Operation(summary = "주식 상세페이지 조회", description = """
             /stock/detail/{idx} 값을 입력 받는다. \n
@@ -78,6 +80,13 @@ public class StockController {
                                                            @PathVariable @Valid @PositiveOrZero Long replyId) {
         stockReplyLikesService.likeReply(user, replyId);
         BaseResponse<String> resp = BaseResponse.success("success");
+        return ResponseEntity.ok(resp);
+    }
+    @Operation(summary="종목의 최신 가격 구하기", description="/recent/{code} URI로 종목 코드 문자열을 code에 받아와 Double 타입으로 최근 가격을 달러 단위로 반환한다.")
+    @GetMapping("/recent/{code}")
+    public ResponseEntity<BaseResponse<Double>> getRecentPrice(@Valid @NotBlank @PathVariable String code) {
+        Double result = stockGraphService.getRecentPrice(code);
+        BaseResponse<Double> resp = BaseResponse.<Double>builder().isSuccess(true).result(result).build();
         return ResponseEntity.ok(resp);
     }
 

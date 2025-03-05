@@ -49,7 +49,7 @@ public class UserController {
     }
 
 
-    @Operation(description="사용자 간 팔로우 기능")
+    @Operation(summary="사용자 팔로우", description="사용자 간 팔로우 기능")
     @PostMapping("/follow")
     public ResponseEntity<BaseResponse<String>> follow(
             @Parameter(description="UserFollowReq 데이터 전송 객체를 사용합니다")
@@ -60,13 +60,13 @@ public class UserController {
         return ResponseEntity.ok(BaseResponse.<String>success("팔로우 성공"));
     }
 
-    @Operation(description="나를 팔로우 중인 사람 조회")
+    @Operation(summary="팔로우 중인 사람 조회",description="나를 팔로우 중인 사람 조회")
     @GetMapping("/follower")
     public ResponseEntity<BaseResponse<FollowerResp>> getFollowers(@AuthenticationPrincipal User user) {
         FollowerResp result = userService.getFollowers(user.getEmail());
         return ResponseEntity.ok(BaseResponse.<FollowerResp>success(result));
     }
-    @Operation(description="내가 팔로우 중인 사람 조회")
+    @Operation(summary="팔로우하는 사람 조회", description="내가 팔로우 중인 사람 조회")
     @GetMapping("/followee")
     public ResponseEntity<BaseResponse<FolloweeResp>> getFollowees(@AuthenticationPrincipal User user) {
         FolloweeResp result = userService.getFollowees(user.getEmail());
@@ -74,7 +74,7 @@ public class UserController {
     }
 
 
-    @Operation(description="사용자 간 팔로우 기능")
+    @Operation(summary="사용자 언팔로우", description="사용자 간 언팔로우 기능")
     @PostMapping("/unfollow")
     public ResponseEntity<BaseResponse<String>> unfollow(
             @Parameter(description="UserFollowReq 데이터 전송 객체를 사용합니다")

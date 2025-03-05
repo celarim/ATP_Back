@@ -69,9 +69,9 @@ public class User implements UserDetails {
     }
 
     // ------------Version--------------
-    @Version
-    @ColumnDefault(value="0")
-    private Long version;
+//    @Version
+//    @ColumnDefault(value="0")
+//    private Long version;
 
     // ------------Relation-------------
 
