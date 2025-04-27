@@ -44,58 +44,27 @@ import static com.querydsl.core.group.GroupBy.list;
 public class PortfolioCustomRepositoryImpl implements PortfolioCustomRepository {
   private final JPAQueryFactory queryFactory;
 
-  //포트폴리오 이름을 이용한 검색
   @Override
-  public List<Portfolio> findAllByNameContaining(String name) {
+  public List<Portfolio> searchAllByKeyword(String keyword) {
     List<Tuple> results = queryFactory
-            .select(portfolio, bookmark.count())
-            .from(portfolio)
-            .leftJoin(bookmark).on(bookmark.portfolio.eq(portfolio))
-            .where(portfolio.name.contains(name))
-            .groupBy(portfolio)
-            .orderBy(bookmark.count().desc())
-            .fetch();
+        .select(portfolio, bookmark.count())
+        .from(portfolio)
+        .leftJoin(portfolio.user, user)
+        .leftJoin(acquisition).on(acquisition.portfolio.eq(portfolio))
+        .leftJoin(acquisition.stock, stock)
+        .leftJoin(bookmark).on(bookmark.portfolio.eq(portfolio))
+        .where(
+            portfolio.name.contains(keyword)
+                .or(user.name.contains(keyword))
+                .or(stock.name.contains(keyword))
+        )
+        .groupBy(portfolio)
+        .orderBy(bookmark.count().desc())
+        .fetch();
 
     return results.stream()
-            .map(tuple -> tuple.get(portfolio))
-            .collect(Collectors.toList());
-  }
-
-  //유저 이름을 이용한 검색
-  @Override
-  public List<Portfolio> findAllByUserNameContaining(String name) {
-    List<Tuple> results = queryFactory
-            .select(portfolio, bookmark.count())
-            .from(portfolio)
-            .leftJoin(portfolio.user, user)
-            .leftJoin(bookmark).on(bookmark.portfolio.eq(portfolio))
-            .where(user.name.contains(name))
-            .groupBy(portfolio)
-            .orderBy(bookmark.count().desc())
-            .fetch();
-
-    return results.stream()
-            .map(tuple -> tuple.get(portfolio))
-            .collect(Collectors.toList());
-  }
-
-  //주식 이름을 이용한 검색
-  @Override
-  public List<Portfolio> findAllByStockNameContaining(String name) {
-    List<Tuple> results = queryFactory
-            .select(portfolio, bookmark.count())
-            .from(portfolio)
-            .leftJoin(acquisition).on(acquisition.portfolio.eq(portfolio))
-            .leftJoin(acquisition.stock, stock)
-            .leftJoin(bookmark).on(bookmark.portfolio.eq(portfolio))
-            .where(stock.name.contains(name))
-            .groupBy(portfolio)
-            .orderBy(bookmark.count().desc())
-            .fetch();
-
-    return results.stream()
-            .map(tuple -> tuple.get(portfolio))
-            .collect(Collectors.toList());
+        .map(tuple -> tuple.get(portfolio))
+        .collect(Collectors.toList());
   }
 
   //북마크 순서대로 정렬하여 포트폴리오 가져오기

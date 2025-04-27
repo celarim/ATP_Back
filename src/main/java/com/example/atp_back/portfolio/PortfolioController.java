@@ -74,24 +74,10 @@ public class PortfolioController {
     portfolioService.viewCnt(portfolioIdx);
   }
 
-  @Operation(summary = "포트폴리오 검색", description = "사용자가 입력한 단어가 포트폴리오의 이름과 같거나 포함된 포트폴리오 목록을 조회")
-  @GetMapping("/search/pname")
-  public ResponseEntity<BaseResponse<PortfolioListResp>> searchByPName(String name) {
-    BaseResponse<PortfolioListResp> resp = BaseResponse.success(portfolioService.searchByPName(name));
-    return ResponseEntity.ok(resp);
-  }
-  
-  @Operation(summary = "포트폴리오 검색", description = "사용자가 입력한 단어가 다른 사용자의 이름과 같거나 포함된 포트폴리오 목록을 조회.")
-  @GetMapping("/search/uname")
-  public ResponseEntity<BaseResponse<PortfolioListResp>> searchByUName(String name) {
-    BaseResponse<PortfolioListResp> resp = BaseResponse.success(portfolioService.searchByUName(name));
-    return ResponseEntity.ok(resp);
-  }
-
-  @Operation(summary = "포트폴리오 검색", description = "사용자가 입력한 단어가 주식 이름과 같거나 포함된 포트폴리오 목록을 조회.")
-  @GetMapping("/search/sname")
-  public ResponseEntity<BaseResponse<PortfolioListResp>> searchBySName(String name) {
-    BaseResponse<PortfolioListResp> resp = BaseResponse.success(portfolioService.searchBySName(name));
+  @Operation(summary = "포트폴리오 검색", description = "사용자가 입력한 단어가 포트폴리오의 이름, 주식 이름, 사용자 이름 중 하나라도 일치하는 포트폴리오의 목록을 조회")
+  @GetMapping("/search/{keyword}")
+  public ResponseEntity<BaseResponse<PortfolioListResp>> searchByKeyword(@PathVariable String keyword) {
+    BaseResponse<PortfolioListResp> resp = BaseResponse.success(portfolioService.searchByKeyword(keyword));
     return ResponseEntity.ok(resp);
   }
 

@@ -69,19 +69,9 @@ public class PortfolioService {
         return PortfolioInstanceResp.fromDetail(portfolio);
     }
 
-    /*포트폴리오 검색 관련*/
-    public PortfolioListResp searchByPName(String name) {
-        List<Portfolio> portfolioList = portfolioRepository.findAllByNameContaining(name);
-        return PortfolioListResp.from(null, portfolioList);
-    }
-
-    public PortfolioListResp searchByUName(String name) {
-        List<Portfolio> portfolioList = portfolioRepository.findAllByUserNameContaining(name);
-        return PortfolioListResp.from(null, portfolioList);
-    }
-
-    public PortfolioListResp searchBySName(String name) {
-        List<Portfolio> portfolioList = portfolioRepository.findAllByStockNameContaining(name);
+    /*포트폴리오 검색*/
+    public PortfolioListResp searchByKeyword(String keyword) {
+        List<Portfolio> portfolioList = portfolioRepository.searchAllByKeyword(keyword);
         return PortfolioListResp.from(null, portfolioList);
     }
 

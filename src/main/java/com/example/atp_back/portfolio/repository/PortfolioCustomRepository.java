@@ -11,11 +11,9 @@ import org.springframework.data.domain.Slice;
 import java.util.List;
 
 public interface PortfolioCustomRepository {
-  //검색 관련
-  List<Portfolio> findAllByNameContaining(String name);
-  List<Portfolio> findAllByUserNameContaining(String name);
-  List<Portfolio> findAllByStockNameContaining(String name);
-
+  //포트폴리오 검색
+  List<Portfolio> searchAllByKeyword(String keyword);
+ 
   //메인 페이지에서 북마크순으로 정렬
   Page<Portfolio> findAllByOrderByBookmarksDesc(Pageable pageable);
 
